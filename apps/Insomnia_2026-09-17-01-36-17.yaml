@@ -1,0 +1,192 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: Smart Home Sensor API
+meta:
+  id: wrk_35644a24d01d4d8fa7ca8dccdb1b8b31
+  created: 1789597943952
+  modified: 1789597943952
+  description: ""
+collection:
+  - name: Smart Home Sensor API
+    meta:
+      id: fld_932b9121dfa24b058363ece679908e1b
+      created: 1789597943953
+      modified: 1789597943953
+      sortKey: -1789597899067
+      description: A collection for testing the Smart Home Sensor Management API
+    children:
+      - url: http://localhost:8080/health
+        name: Health Check
+        meta:
+          id: req_08022d8d34444eae9bda386e73a3ee83
+          created: 1789597943954
+          modified: 1789597943954
+          isPrivate: false
+          description: Check if the API is running
+          sortKey: -1789597899066
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/v1/sensors
+        name: Get All Sensors
+        meta:
+          id: req_404fa59acb884aafbb717be2444fd76f
+          created: 1789597943955
+          modified: 1789597943955
+          isPrivate: false
+          description: Retrieve all sensors
+          sortKey: -1789597899065
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/v1/sensors
+        name: Create Sensor
+        meta:
+          id: req_512066533733465eaa5e8db299286097
+          created: 1789597943955
+          modified: 1789597943955
+          isPrivate: false
+          description: Create a new sensor
+          sortKey: -1789597899063
+        method: POST
+        body:
+          mimeType: text/plain
+          text: |-
+            {
+                "name": "Living Room Temperature",
+                "type": "temperature",
+                "location": "Living Room",
+                "unit": "°C"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/v1/sensors/1
+        name: Get Sensor by ID
+        meta:
+          id: req_cf03934ba250444a82ecfeb0afe605d1
+          created: 1789597943955
+          modified: 1789597943955
+          isPrivate: false
+          description: Retrieve a specific sensor by ID
+          sortKey: -1789597899064
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/v1/sensors/1
+        name: Update Sensor
+        meta:
+          id: req_2b89c4bc496742e098e798a7c85563aa
+          created: 1789597943956
+          modified: 1789597943956
+          isPrivate: false
+          description: Update an existing sensor
+          sortKey: -1789597899062
+        method: PUT
+        body:
+          mimeType: text/plain
+          text: |-
+            {
+                "name": "Updated Living Room Temperature",
+                "type": "temperature",
+                "location": "Living Room",
+                "unit": "°C"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/v1/sensors/1
+        name: Delete Sensor
+        meta:
+          id: req_46e5c32292274c7fbb10974560b6da2b
+          created: 1789597943956
+          modified: 1789598139951
+          isPrivate: false
+          description: Delete a sensor
+          sortKey: -1789597899061
+        method: DELETE
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/v1/sensors/1/value
+        name: Update Sensor Value
+        meta:
+          id: req_d27ca4e2f8ad438c976b23beb631898c
+          created: 1789597943956
+          modified: 1789597943956
+          isPrivate: false
+          description: Update a sensor's value and status
+          sortKey: -1789597899060
+        method: PATCH
+        body:
+          mimeType: text/plain
+          text: |-
+            {
+                "value": 22.5,
+                "status": "active"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_e5c26d83c656c8b8ec93315f58279d72bc9cd76f
+    created: 1789597943985
+    modified: 1789597943985
+environments:
+  name: Variables
+  meta:
+    id: env_e5d8650278984004bdff0c2a61002803
+    created: 1789597943957
+    modified: 1789597943957
+    isPrivate: false
+  data:
+    baseUrl: http://localhost:8080
