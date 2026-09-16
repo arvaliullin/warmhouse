@@ -1,0 +1,116 @@
+asyncapi: 2.6.0
+info:
+  title: Smart Home Broker Events
+  description: >
+    AsyncAPI-документация событий, которыми микросервисы обмениваются через брокер сообщений.
+    Используется для взаимодействий, где отправителю не нужен немедленный ответ.
+  version: 1.0.0
+channels:
+  heating.commands:
+    description: Команды управления отоплением, публикуемые сервисом управления отоплением для устройства
+    publish:
+      summary: Опубликовать команду включения или выключения отопления
+      operationId: publishHeatingCommand
+      message:
+        $ref: "#/components/messages/HeatingCommand"
+  heating.state:
+    description: Текущее состояние отопления, публикуемое устройством после выполнения команды
+    subscribe:
+      summary: Получить состояние отопления от устройства
+      operationId: subscribeHeatingState
+      message:
+        $ref: "#/components/messages/HeatingStateChanged"
+  telemetry.recorded:
+    description: Новое измерение, полученное от устройства и опубликованное для сервиса телеметрии
+    subscribe:
+      summary: Получить уведомление о новом измерении температуры
+      operationId: subscribeTelemetryRecorded
+      message:
+        $ref: "#/components/messages/TelemetryRecorded"
+components:
+  messages:
+    HeatingCommand:
+      name: HeatingCommand
+      title: Команда управления отоплением
+      payload:
+        $ref: "#/components/schemas/HeatingCommandPayload"
+      examples:
+        - name: TurnOff
+          payload:
+            houseId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+            command: "off"
+            issuedAt: "2026-09-16T21:05:00Z"
+    HeatingStateChanged:
+      name: HeatingStateChanged
+      title: Состояние отопления изменилось
+      payload:
+        $ref: "#/components/schemas/HeatingStatePayload"
+      examples:
+        - name: StateOff
+          payload:
+            houseId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+            status: "off"
+            updatedAt: "2026-09-16T21:05:10Z"
+    TelemetryRecorded:
+      name: TelemetryRecorded
+      title: Зафиксировано новое измерение температуры
+      payload:
+        $ref: "#/components/schemas/TelemetryPayload"
+      examples:
+        - name: TemperatureMeasurement
+          payload:
+            deviceId: "9b2d3c44-1a2b-4c3d-9e0f-123456789abc"
+            metric: "temperature"
+            value: "21.5"
+            recordedAt: "2026-09-16T21:05:00Z"
+  schemas:
+    HeatingCommandPayload:
+      type: object
+      required:
+        - houseId
+        - command
+        - issuedAt
+      properties:
+        houseId:
+          type: string
+          format: uuid
+        command:
+          type: string
+          enum: [on, off]
+        issuedAt:
+          type: string
+          format: date-time
+    HeatingStatePayload:
+      type: object
+      required:
+        - houseId
+        - status
+        - updatedAt
+      properties:
+        houseId:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [on, off]
+        updatedAt:
+          type: string
+          format: date-time
+    TelemetryPayload:
+      type: object
+      required:
+        - deviceId
+        - metric
+        - value
+        - recordedAt
+      properties:
+        deviceId:
+          type: string
+          format: uuid
+        metric:
+          type: string
+        value:
+          type: string
+        recordedAt:
+          type: string
+          format: date-time
