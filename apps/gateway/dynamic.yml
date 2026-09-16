@@ -1,0 +1,53 @@
+http:
+  routers:
+    app:
+      rule: "PathPrefix(`/`)"
+      entryPoints:
+        - web
+      service: app
+      priority: 1
+
+    device-service:
+      rule: "PathPrefix(`/api/v1/devices`)"
+      entryPoints:
+        - web
+      service: device-service
+      middlewares:
+        - device-service-strip
+      priority: 10
+
+    telemetry-service:
+      rule: "PathPrefix(`/api/v1/telemetry`)"
+      entryPoints:
+        - web
+      service: telemetry-service
+      middlewares:
+        - telemetry-service-strip
+      priority: 10
+
+  middlewares:
+    device-service-strip:
+      replacePathRegex:
+        regex: "^/api/v1/devices(.*)"
+        replacement: "/devices$1"
+
+    telemetry-service-strip:
+      replacePathRegex:
+        regex: "^/api/v1/telemetry(.*)"
+        replacement: "/telemetry$1"
+
+  services:
+    app:
+      loadBalancer:
+        servers:
+          - url: "http://app:8080"
+
+    device-service:
+      loadBalancer:
+        servers:
+          - url: "http://device-service:8082"
+
+    telemetry-service:
+      loadBalancer:
+        servers:
+          - url: "http://telemetry-service:8083"
