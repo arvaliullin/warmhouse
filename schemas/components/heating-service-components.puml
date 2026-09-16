@@ -1,0 +1,24 @@
+@startuml heating-service-components
+!RELATIVE_INCLUDE = "."
+!include ../c4/C4_Component.puml
+
+title Компоненты сервиса управления отоплением
+
+Container(api_gateway, "Входная точка API", "Приложение")
+ContainerQueue(message_broker, "Брокер сообщений", "Очередь сообщений")
+
+Container_Boundary(heating_service, "Сервис управления отоплением") {
+  Component(api, "API отопления", "API", "Принимает команды включения и выключения отопления")
+  Component(command_handler, "Обработчик команд", "Компонент", "Обрабатывает команды управления отоплением")
+  Component(state_manager, "Менеджер состояния", "Компонент", "Управляет состоянием отопления")
+  Component(message_adapter, "Адаптер сообщений", "Компонент", "Передает команды и получает состояние")
+}
+
+Rel(api_gateway, api, "Передает запросы")
+Rel(api, command_handler, "Передает команду")
+Rel(command_handler, state_manager, "Изменяет состояние")
+Rel(command_handler, message_adapter, "Передает команду устройству")
+Rel(message_adapter, message_broker, "Публикует команды и получает состояние")
+
+LAYOUT_LEFT_RIGHT()
+@enduml

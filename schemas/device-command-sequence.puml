@@ -1,0 +1,35 @@
+@startuml device-command-sequence
+
+title Выполнение команды управления отоплением
+
+actor "Пользователь" as user
+boundary "Веб-приложение" as web_app
+control "Входная точка API" as api_gateway
+control "API отопления" as heating_api
+control "Обработчик команд" as command_handler
+control "Адаптер сообщений" as heating_message_adapter
+queue "Брокер сообщений" as message_broker
+control "Обработчик сообщений устройств" as device_message_handler
+control "Адаптер протоколов" as protocol_adapter
+entity "Устройство отопления" as heating_device
+
+user -> web_app: Включить или выключить отопление
+web_app -> api_gateway: Передать команду
+api_gateway -> heating_api: Направить команду
+heating_api -> command_handler: Обработать команду
+command_handler -> heating_message_adapter: Передать команду устройству
+heating_message_adapter -> message_broker: Опубликовать команду
+message_broker -> device_message_handler: Получить команду
+device_message_handler -> protocol_adapter: Передать команду
+protocol_adapter -> heating_device: Выполнить команду\nпо стандартному протоколу через интернет
+heating_device --> protocol_adapter: Передать состояние
+protocol_adapter --> device_message_handler: Передать состояние
+device_message_handler --> message_broker: Опубликовать состояние
+message_broker --> heating_message_adapter: Получить состояние
+heating_message_adapter --> command_handler: Передать состояние
+command_handler --> heating_api: Вернуть результат
+heating_api --> api_gateway: Вернуть результат
+api_gateway --> web_app: Вернуть результат
+web_app --> user: Показать результат
+
+@enduml
