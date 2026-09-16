@@ -1,0 +1,54 @@
+@startuml target-system-containers
+!RELATIVE_INCLUDE = "."
+!include c4/C4_Container.puml
+
+title Контейнерная диаграмма целевой экосистемы
+
+Person(user, "Пользователь", "Подключает устройства, управляет домом, настраивает сценарии и просматривает телеметрию")
+System_Ext(partner_devices, "Устройства партнеров", "Отопление, освещение, ворота, устройства наблюдения и датчики")
+
+System_Boundary(ecosystem, "Экосистема умного дома") {
+  Container(web_app, "Веб-приложение", "Веб-интерфейс", "Предоставляет пользователю доступ к экосистеме")
+  Container(api_gateway, "Входная точка API", "Приложение", "Направляет запросы в нужный микросервис")
+
+  Container(device_service, "Сервис подключения устройств", "Микросервис", "Подключает и настраивает устройства партнеров")
+  Container(heating_service, "Сервис управления отоплением", "Микросервис", "Включает и выключает отопление")
+  Container(lighting_service, "Сервис управления освещением", "Микросервис", "Включает и выключает свет")
+  Container(gate_service, "Сервис управления воротами", "Микросервис", "Запирает и отпирает автоматические ворота")
+  Container(surveillance_service, "Сервис наблюдения", "Микросервис", "Обеспечивает удаленное наблюдение за домом")
+  Container(scenario_service, "Сервис сценариев", "Микросервис", "Хранит и выполняет настроенные пользователем сценарии")
+  Container(telemetry_service, "Сервис телеметрии", "Микросервис", "Принимает и предоставляет телеметрию устройств")
+
+  ContainerQueue(message_broker, "Брокер сообщений", "Очередь сообщений", "Передает команды, состояния и телеметрию")
+
+  ContainerDb(device_db, "База устройств", "База данных", "Хранит подключенные устройства и их настройки")
+  ContainerDb(scenario_db, "База сценариев", "База данных", "Хранит сценарии пользователя")
+  ContainerDb(telemetry_db, "База телеметрии", "База данных", "Хранит телеметрию устройств")
+}
+
+Rel(user, web_app, "Использует")
+Rel(web_app, api_gateway, "Отправляет запросы")
+
+Rel(api_gateway, device_service, "Подключение и настройка устройств")
+Rel(api_gateway, heating_service, "Управление отоплением")
+Rel(api_gateway, lighting_service, "Управление освещением")
+Rel(api_gateway, gate_service, "Управление воротами")
+Rel(api_gateway, surveillance_service, "Удаленное наблюдение")
+Rel(api_gateway, scenario_service, "Настройка сценариев")
+Rel(api_gateway, telemetry_service, "Просмотр телеметрии")
+
+Rel(device_service, partner_devices, "Подключает и обменивается данными", "Стандартные протоколы через интернет")
+Rel(device_service, message_broker, "Получает команды и передает данные устройств")
+Rel(heating_service, message_broker, "Передает команды отоплению и получает состояние")
+Rel(lighting_service, message_broker, "Передает команды освещению и получает состояние")
+Rel(gate_service, message_broker, "Передает команды воротам и получает состояние")
+Rel(surveillance_service, device_service, "Получает доступ к устройствам наблюдения")
+Rel(scenario_service, message_broker, "Передает команды по сценариям")
+Rel(message_broker, telemetry_service, "Передает телеметрию")
+
+Rel(device_service, device_db, "Читает и сохраняет")
+Rel(scenario_service, scenario_db, "Читает и сохраняет")
+Rel(telemetry_service, telemetry_db, "Читает и сохраняет")
+
+LAYOUT_LEFT_RIGHT()
+@enduml
