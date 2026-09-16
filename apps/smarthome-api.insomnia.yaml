@@ -175,6 +175,152 @@ collection:
             send: true
             store: true
           rebuildPath: true
+  - name: Device Service
+    meta:
+      id: fld_d15d5d6350fa4940b0f13192ced95fcf
+      created: 1789597943953
+      modified: 1789597943953
+      sortKey: -1789597899050
+      description: A collection for testing the Device Service API
+    children:
+      - url: http://localhost:8082/health
+        name: Health Check
+        meta:
+          id: req_9d17602f9d6f446faad6497689a68b37
+          created: 1789597943954
+          modified: 1789597943954
+          isPrivate: false
+          description: Check if the device-service is running
+          sortKey: -1789597899049
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/v1/devices
+        name: Get All Devices
+        meta:
+          id: req_627bf3747223418a89da78597a9812e8
+          created: 1789597943955
+          modified: 1789597943955
+          isPrivate: false
+          description: Retrieve all devices
+          sortKey: -1789597899048
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/v1/devices
+        name: Create Device
+        meta:
+          id: req_5158f2326eb14355a84b9947e886424d
+          created: 1789597943955
+          modified: 1789597943955
+          isPrivate: false
+          description: Register a new device
+          sortKey: -1789597899047
+        method: POST
+        body:
+          mimeType: text/plain
+          text: |-
+            {
+                "type_id": "thermostat",
+                "house_id": "house-1",
+                "serial_number": "SN-001"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Telemetry Service
+    meta:
+      id: fld_22988506a3f645b181ee27f948e9c0e5
+      created: 1789597943953
+      modified: 1789597943953
+      sortKey: -1789597899046
+      description: A collection for testing the Telemetry Service API
+    children:
+      - url: http://localhost:8083/health
+        name: Health Check
+        meta:
+          id: req_dfaf80c9215940cd903aba3136ff68b1
+          created: 1789597943954
+          modified: 1789597943954
+          isPrivate: false
+          description: Check if the telemetry-service is running
+          sortKey: -1789597899045
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/v1/telemetry
+        name: Get All Telemetry
+        meta:
+          id: req_fa0892eb56234cb9b5bc2855139af694
+          created: 1789597943955
+          modified: 1789597943955
+          isPrivate: false
+          description: Retrieve all telemetry records
+          sortKey: -1789597899044
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://localhost:8080/api/v1/telemetry
+        name: Create Telemetry
+        meta:
+          id: req_5139621127b343909422c8593ecb6ea0
+          created: 1789597943955
+          modified: 1789597943955
+          isPrivate: false
+          description: Record a new telemetry measurement
+          sortKey: -1789597899043
+        method: POST
+        body:
+          mimeType: text/plain
+          text: |-
+            {
+                "device_id": "sensor-1",
+                "metric": "temperature",
+                "value": "21.5"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
 cookieJar:
   name: Default Jar
   meta:
