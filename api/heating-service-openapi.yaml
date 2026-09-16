@@ -1,0 +1,133 @@
+openapi: 3.0.3
+info:
+  title: Heating Service API
+  description: REST API сервиса управления отоплением. Входная точка API обращается к этим эндпойнтам синхронно.
+  version: 1.0.0
+servers:
+  - url: https://api.warmhouse.example.com/v1
+paths:
+  /houses/{houseId}/heating:
+    get:
+      summary: Получить текущее состояние отопления в доме
+      operationId: getHeatingState
+      parameters:
+        - name: houseId
+          in: path
+          required: true
+          description: Идентификатор дома
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Текущее состояние отопления
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HeatingState"
+              example:
+                houseId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                status: "on"
+                updatedAt: "2026-09-16T21:00:00Z"
+        "404":
+          description: Дом не найден или отопление не подключено
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                code: "HOUSE_NOT_FOUND"
+                message: "Дом с указанным идентификатором не найден"
+        "500":
+          description: Внутренняя ошибка сервиса
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                code: "INTERNAL_ERROR"
+                message: "Внутренняя ошибка сервиса"
+    patch:
+      summary: Включить или выключить отопление в доме
+      operationId: updateHeatingState
+      parameters:
+        - name: houseId
+          in: path
+          required: true
+          description: Идентификатор дома
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HeatingStateUpdate"
+            example:
+              status: "off"
+      responses:
+        "202":
+          description: Команда принята и передана устройству через брокер сообщений
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HeatingState"
+              example:
+                houseId: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                status: "off"
+                updatedAt: "2026-09-16T21:05:00Z"
+        "404":
+          description: Дом не найден или отопление не подключено
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                code: "HOUSE_NOT_FOUND"
+                message: "Дом с указанным идентификатором не найден"
+        "500":
+          description: Внутренняя ошибка сервиса
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                code: "INTERNAL_ERROR"
+                message: "Внутренняя ошибка сервиса"
+components:
+  schemas:
+    HeatingState:
+      type: object
+      required:
+        - houseId
+        - status
+        - updatedAt
+      properties:
+        houseId:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [on, off]
+        updatedAt:
+          type: string
+          format: date-time
+    HeatingStateUpdate:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum: [on, off]
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
