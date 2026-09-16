@@ -1,0 +1,54 @@
+@startuml target-system-er
+
+title ER-диаграмма целевой экосистемы
+
+entity "User" as user {
+  * id : UUID <<PK>>
+}
+
+entity "House" as house {
+  * id : UUID <<PK>>
+  --
+  * user_id : UUID <<FK>>
+}
+
+entity "DeviceType" as device_type {
+  * id : UUID <<PK>>
+  --
+  * name : string
+}
+
+entity "Module" as module_entity {
+  * id : UUID <<PK>>
+  --
+  * house_id : UUID <<FK>>
+  * serial_number : string
+}
+
+entity "Device" as device {
+  * id : UUID <<PK>>
+  --
+  * type_id : UUID <<FK>>
+  * house_id : UUID <<FK>>
+  module_id : UUID <<FK>>
+  * serial_number : string
+  * status : string
+}
+
+entity "TelemetryData" as telemetry {
+  * id : UUID <<PK>>
+  --
+  * device_id : UUID <<FK>>
+  * metric : string
+  * value : string
+  * recorded_at : datetime
+}
+
+user ||--o{ house : имеет
+house ||--o{ module_entity : содержит
+house ||--o{ device : содержит
+device_type ||--o{ device : определяет тип
+module_entity |o--o{ device : управляет
+device ||--o{ telemetry : передает
+
+@enduml
