@@ -14,5 +14,5 @@
     "schemas/c4"
   ],
   "plantuml.diagramsRoot": "schemas",
-  "plantuml.exportOutDir": "schemas/out"
+  "plantuml.exportOutDir": "schemas/images"
 }
